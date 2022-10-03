@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "lib": ["ES2015", "ESNext"],
+    "module": "CommonJS",
+    "noImplicitAny": true,
+    "strict": true,
+    "target": "ES3"
+  }
+}
