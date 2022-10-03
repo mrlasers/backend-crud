@@ -1,20 +1,15 @@
+import * as bodyParser from "body-parser"
 import * as express from "express"
+import * as E from "fp-ts/Either"
+import { flow, pipe } from "fp-ts/lib/function"
+import { nanoid } from "nanoid"
+
+import { Book, NewBook } from "./features/books"
 
 const app = express()
 const port = 9666
 
 app.get("/", (req, res) => res.send("Hello, World!"))
-
-export type Book = {
-  id: string
-  title: string
-  author: {
-    fname: string
-    lname: string
-  }
-  publisher: string
-  releaseYear: number
-}
 
 type Schema = {
   books: Book[]
@@ -51,6 +46,26 @@ app.get("/books/:id?", (req, res) => {
     : fakeDb.books
 
   return res.send(result || [])
+})
+
+app.post("/books", bodyParser.json(), (req, res) => {
+  return pipe(
+    req.body,
+    NewBook.decode,
+    E.map((newBook) => ({
+      ...newBook,
+      id: nanoid(),
+    })),
+    E.fold(
+      (err) => res.send(err).status(400),
+      (book) => {
+        fakeDb.books = [...fakeDb.books, book]
+        return res.send(fakeDb.books)
+      }
+    )
+  )
+
+  // res.send("Thanks for posting!")
 })
 
 app.listen(port, () => {

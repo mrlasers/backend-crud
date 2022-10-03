@@ -33,9 +33,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
+            ["@types/body-parser", "npm:1.19.2"],\
             ["@types/express", "npm:4.17.14"],\
             ["@yarnpkg/pnpify", "npm:4.0.0-rc.22"],\
+            ["body-parser", "npm:1.20.0"],\
             ["express", "npm:4.18.1"],\
+            ["fp-ts", "npm:2.12.3"],\
+            ["io-ts", "virtual:11a5d00f754b4033d2d74858b1d4817217a198024b6874cdd05fa9abaf7ac5576fb181f3f15af19984a68aa6c10d81ecde83a7aab08adc3576d30ccf09ce8fc1#npm:2.2.18"],\
+            ["nanoid", "npm:3.3.4"],\
             ["ts-node", "virtual:11a5d00f754b4033d2d74858b1d4817217a198024b6874cdd05fa9abaf7ac5576fb181f3f15af19984a68aa6c10d81ecde83a7aab08adc3576d30ccf09ce8fc1#npm:10.9.1"],\
             ["ts-node-dev", "virtual:11a5d00f754b4033d2d74858b1d4817217a198024b6874cdd05fa9abaf7ac5576fb181f3f15af19984a68aa6c10d81ecde83a7aab08adc3576d30ccf09ce8fc1#npm:2.0.0"],\
             ["typescript", "patch:typescript@npm%3A4.6.4#~builtin<compat/typescript>::version=4.6.4&hash=a1c5e5"]\
@@ -682,9 +687,14 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["backend-crud", "workspace:."],\
+            ["@types/body-parser", "npm:1.19.2"],\
             ["@types/express", "npm:4.17.14"],\
             ["@yarnpkg/pnpify", "npm:4.0.0-rc.22"],\
+            ["body-parser", "npm:1.20.0"],\
             ["express", "npm:4.18.1"],\
+            ["fp-ts", "npm:2.12.3"],\
+            ["io-ts", "virtual:11a5d00f754b4033d2d74858b1d4817217a198024b6874cdd05fa9abaf7ac5576fb181f3f15af19984a68aa6c10d81ecde83a7aab08adc3576d30ccf09ce8fc1#npm:2.2.18"],\
+            ["nanoid", "npm:3.3.4"],\
             ["ts-node", "virtual:11a5d00f754b4033d2d74858b1d4817217a198024b6874cdd05fa9abaf7ac5576fb181f3f15af19984a68aa6c10d81ecde83a7aab08adc3576d30ccf09ce8fc1#npm:10.9.1"],\
             ["ts-node-dev", "virtual:11a5d00f754b4033d2d74858b1d4817217a198024b6874cdd05fa9abaf7ac5576fb181f3f15af19984a68aa6c10d81ecde83a7aab08adc3576d30ccf09ce8fc1#npm:2.0.0"],\
             ["typescript", "patch:typescript@npm%3A4.6.4#~builtin<compat/typescript>::version=4.6.4&hash=a1c5e5"]\
@@ -1364,6 +1374,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["fp-ts", [\
+        ["npm:2.12.3", {\
+          "packageLocation": "./.yarn/cache/fp-ts-npm-2.12.3-d126f7fb51-398acad3d8.zip/node_modules/fp-ts/",\
+          "packageDependencies": [\
+            ["fp-ts", "npm:2.12.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["fresh", [\
         ["npm:0.5.2", {\
           "packageLocation": "./.yarn/cache/fresh-npm-0.5.2-ad2bb4c0a2-13ea8b08f9.zip/node_modules/fresh/",\
@@ -1714,6 +1733,28 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/inherits-npm-2.0.4-c66b3957a0-4a48a73384.zip/node_modules/inherits/",\
           "packageDependencies": [\
             ["inherits", "npm:2.0.4"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["io-ts", [\
+        ["npm:2.2.18", {\
+          "packageLocation": "./.yarn/cache/io-ts-npm-2.2.18-f566ee3cf2-8b5a22b0cc.zip/node_modules/io-ts/",\
+          "packageDependencies": [\
+            ["io-ts", "npm:2.2.18"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:11a5d00f754b4033d2d74858b1d4817217a198024b6874cdd05fa9abaf7ac5576fb181f3f15af19984a68aa6c10d81ecde83a7aab08adc3576d30ccf09ce8fc1#npm:2.2.18", {\
+          "packageLocation": "./.yarn/__virtual__/io-ts-virtual-a7c320176e/0/cache/io-ts-npm-2.2.18-f566ee3cf2-8b5a22b0cc.zip/node_modules/io-ts/",\
+          "packageDependencies": [\
+            ["io-ts", "virtual:11a5d00f754b4033d2d74858b1d4817217a198024b6874cdd05fa9abaf7ac5576fb181f3f15af19984a68aa6c10d81ecde83a7aab08adc3576d30ccf09ce8fc1#npm:2.2.18"],\
+            ["@types/fp-ts", null],\
+            ["fp-ts", "npm:2.12.3"]\
+          ],\
+          "packagePeers": [\
+            "@types/fp-ts",\
+            "fp-ts"\
           ],\
           "linkType": "HARD"\
         }]\
@@ -2130,6 +2171,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/ms-npm-2.1.3-81ff3cfac1-aa92de6080.zip/node_modules/ms/",\
           "packageDependencies": [\
             ["ms", "npm:2.1.3"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["nanoid", [\
+        ["npm:3.3.4", {\
+          "packageLocation": "./.yarn/cache/nanoid-npm-3.3.4-3d250377d6-2fddd6dee9.zip/node_modules/nanoid/",\
+          "packageDependencies": [\
+            ["nanoid", "npm:3.3.4"]\
           ],\
           "linkType": "HARD"\
         }]\
