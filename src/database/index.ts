@@ -41,38 +41,81 @@ function addBookId(id: ID) {
   }
 }
 
-type ErrorMsg = { _tag: "ERROR"; code: number; msg: string }
+type ErrorMsg = { type: "BAD_REQUEST"; msg: string }
 
-function error(code: number, msg: string) {
-  return (): ErrorMsg => ({ _tag: "ERROR", code, msg })
-}
-
-export function addBook(newBook: any): E.Either<ErrorMsg, Book> {
-  return pipe(
-    newBook,
-    NewBook.decode,
-    E.mapLeft(error(400, "Bad Request")),
-    E.map(
-      flow(addBookId(nanoid()), (book) => {
-        fakeDb.books = [...fakeDb.books, book]
-        return book
-      })
-    )
-  )
-}
-
-export function getBooks(bookId?: ID): Book[] {
-  return pipe(
-    O.fromNullable(bookId),
-    O.map(
-      flow((id) => fakeDb.books.find((book) => book.id === id), O.fromNullable)
-    ),
-    O.fold(
-      () => fakeDb.books,
-      O.fold(
-        () => [],
-        (book) => [book]
+export function _addBook({
+  nextBookId,
+  getBooks,
+  callback,
+}: {
+  nextBookId: () => ID
+  // getBooks() in case we want to do some kind of filtering before
+  // blindly adding a duplicate or something; the naive approach
+  getBooks: () => Book[]
+  // do whatever with the updated book array
+  callback: (books: Book[]) => void
+}) {
+  return (newBook: NewBook | any): E.Either<ErrorMsg, Book> =>
+    pipe(
+      newBook,
+      NewBook.decode,
+      E.mapLeft((err): ErrorMsg => ({ type: "BAD_REQUEST", msg: String(err) })),
+      E.map(
+        flow(addBookId(nextBookId()), (book) => {
+          callback([...getBooks(), book])
+          return book
+        })
       )
     )
-  )
 }
+
+export const addBook = _addBook({
+  nextBookId: nanoid,
+  getBooks: () => fakeDb.books,
+  callback: (books) => {
+    fakeDb.books = books
+  },
+})
+
+export function _getBooks({ getBooks }: { getBooks: () => Book[] }) {
+  return (bookId?: ID): Book | Book[] => {
+    const books = getBooks()
+
+    return pipe(
+      O.fromNullable(bookId),
+      O.map(flow((id) => books.find((book) => book.id === id), O.fromNullable)),
+      O.fold(
+        () => books,
+        O.fold(
+          () => [],
+          (book) => [book]
+        )
+      )
+    )
+  }
+}
+
+export const getBooks = _getBooks({ getBooks: () => fakeDb.books })
+
+export function _deleteBook({
+  getBooks,
+  callback,
+}: {
+  getBooks: () => Book[]
+  callback: (book: Book[]) => void
+}) {
+  return (bookId: string): E.Either<ErrorMsg, ID> => {
+    const books = getBooks().filter((book) => book.id !== bookId)
+
+    callback(books)
+
+    return E.right(bookId)
+  }
+}
+
+export const deleteBook = _deleteBook({
+  getBooks: () => fakeDb.books,
+  callback: (books) => {
+    fakeDb.books = books
+  },
+})

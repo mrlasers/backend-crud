@@ -3,7 +3,7 @@ import * as express from "express"
 import * as E from "fp-ts/Either"
 import { flow, pipe } from "fp-ts/lib/function"
 
-import { addBook, getBooks } from "./database"
+import { addBook, deleteBook, getBooks } from "./database"
 import { Book, ID, NewBook } from "./features/books"
 
 const app = express()
@@ -18,7 +18,6 @@ app.get("/books/:id?", (req, res) => {
 app.post("/books", bodyParser.json(), (req, res) => {
   return pipe(
     addBook(req.body),
-    (result) => result,
     E.fold(
       (err) => res.send(err.msg).status(400),
       (book) => res.send(book)
@@ -26,11 +25,9 @@ app.post("/books", bodyParser.json(), (req, res) => {
   )
 })
 
-// app.delete("/books/:id", (req, res) => {
-//   fakeDb.books = fakeDb.books.filter((book) => book.id !== req.params.id)
-
-//   return res.send(fakeDb.books)
-// })
+app.delete("/books/:id", (req, res) => {
+  return res.send(deleteBook(req.params.id))
+})
 
 app.listen(port, () => {
   console.log(`backend-crud listening on port ${port}`)
