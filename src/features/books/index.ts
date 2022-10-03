@@ -1,6 +1,8 @@
 import { flow, pipe } from "fp-ts/lib/function"
 import * as D from "io-ts/Decoder"
 
+export { booksRouter } from "./routes"
+
 const thisYear = new Date().getFullYear()
 
 const YearD = pipe(
