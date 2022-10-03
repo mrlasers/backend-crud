@@ -21,6 +21,8 @@ export const ID = pipe(
   )
 )
 
+export type ID = D.TypeOf<typeof ID>
+
 export const NewBook = D.struct({
   title: D.string,
   author: D.struct({
