@@ -64,8 +64,12 @@ app.post("/books", bodyParser.json(), (req, res) => {
       }
     )
   )
+})
 
-  // res.send("Thanks for posting!")
+app.delete("/books/:id", (req, res) => {
+  fakeDb.books = fakeDb.books.filter((book) => book.id !== req.params.id)
+
+  return res.send(fakeDb.books)
 })
 
 app.listen(port, () => {
