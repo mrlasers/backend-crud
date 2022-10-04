@@ -7,48 +7,53 @@ import { addBook, deleteBook, getBooks, updateBook } from "../../database"
 
 export const booksRouter = express.Router()
 
-booksRouter.get("/:id?", (req, res) => {
-  return res.send(getBooks(req.params.id))
-})
+booksRouter.get("/:id?", (req, res) =>
+  pipe(
+    getBooks(req.params.id),
+    E.fold(
+      (msg) => res.status(404).send(`Resource not found: "${req.params.id}`),
+      (found) => res.send(found)
+    )
+  )
+)
 
-booksRouter.post("/", bodyParser.json(), (req, res) => {
-  return pipe(
+booksRouter.post("/", bodyParser.json(), (req, res) =>
+  pipe(
     addBook(req.body),
     E.fold(
-      (err) => res.send(err.msg).status(400),
-      (book) => res.send(book).status(201)
+      (err) => res.status(400).send(err.msg),
+      (book) => res.status(201).send(book)
     )
   )
-})
+)
 
-booksRouter.delete("/:id", (req, res) => {
-  return pipe(
+booksRouter.delete("/:id", (req, res) =>
+  pipe(
     deleteBook(req.params.id),
     E.fold(
-      () => res.send("Not found").status(304),
-      (id) => res.send(`Book deleted: "${id}"`)
+      () => res.status(304).send("Not found"),
+      (id) => res.send(id)
     )
   )
-})
+)
 
-booksRouter.put("/:id", bodyParser.json(), (req, res) => {
-  console.log(req.body)
-  return pipe(
-    updateBook(req.params.id, req.body),
+booksRouter.put("/:id", bodyParser.json(), (req, res) =>
+  pipe(
+    updateBook({ id: req.params.id, bookUpdate: req.body }),
     E.fold(
       (msg) => {
         switch (msg.type) {
           default:
-            return res.send(`Server error, please try again later.`).status(500)
+            return res.status(500).send(`Server error, please try again later.`)
           case "BAD_REQUEST":
-            return res.send(`Bad request`).status(400)
+            return res.status(400).send(`Bad request`)
           case "NOT_FOUND":
             return res
-              .send(`Resource not found: "${req.params.id}"`)
               .status(404)
+              .send(`Resource not found: "${req.params.id}"`)
         }
       },
-      (result) => res.send(result).status(200)
+      (result) => res.status(200).send(result)
     )
   )
-})
+)

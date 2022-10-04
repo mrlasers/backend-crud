@@ -9,6 +9,7 @@ type FakeDbSchema = {
   books: Book[]
 }
 
+// fake db data
 const fakeDb: FakeDbSchema = {
   books: [
     {
@@ -38,12 +39,6 @@ function updateDbBooks(books: Book[]): void {
   fakeDb.books = books
 }
 
-function addBookId(id: ID) {
-  return (newBook: NewBook): Book => {
-    return { ...newBook, id }
-  }
-}
-
 type ErrorMsg =
   | { type: "BAD_REQUEST"; msg?: string }
   | { type: "SERVER_ERROR"; msg?: string }
@@ -51,6 +46,12 @@ type ErrorMsg =
 
 function errorMsg(msg: ErrorMsg): ErrorMsg {
   return msg
+}
+
+function addBookId(id: ID) {
+  return (newBook: NewBook): Book => {
+    return { ...newBook, id }
+  }
 }
 
 export function _addBook({
@@ -80,17 +81,17 @@ export function _addBook({
 }
 
 export function _getBooks({ getBooks }: { getBooks: () => Book[] }) {
-  return (bookId?: ID): Book | Book[] => {
+  return (bookId?: ID): E.Either<ErrorMsg, Book[]> => {
     const books = getBooks()
 
     return pipe(
       O.fromNullable(bookId),
       O.map(flow((id) => books.find((book) => book.id === id), O.fromNullable)),
       O.fold(
-        () => books,
+        () => E.right(books),
         O.fold(
-          () => [],
-          (book) => [book]
+          () => E.left(errorMsg({ type: "NOT_FOUND" })),
+          (book) => E.right([book])
         )
       )
     )
@@ -120,17 +121,18 @@ function _updateBook({
   getBooks: () => Book[]
   callback: (books: Book[]) => void
 }) {
-  return (id: ID, bookUpdate: BookUpdate): E.Either<ErrorMsg, Book[]> => {
+  return ({
+    id,
+    bookUpdate,
+  }: {
+    id: ID
+    bookUpdate: BookUpdate
+  }): E.Either<ErrorMsg, Book[]> => {
     const books = getBooks()
 
     return pipe(
       bookUpdate,
       BookUpdate.decode,
-      (result) => {
-        console.log("bookupdate decoder result", result)
-
-        return result
-      },
       E.mapLeft(() => errorMsg({ type: "BAD_REQUEST" })),
       E.chain((update) =>
         Object.keys(update).length

@@ -11,13 +11,7 @@ const html = `
 <p>See source on <a href='https://github.com/mrlasers/backend-crud'>GitHub</a>.</p>
 `
 
-app.get(
-  "/",
-  (req, res) => res.send(html)
-  // res.send(
-  //   "It's a book library CRUD server. See the source on <a href='https://github.com/mrlasers/backend-crud'>GitHub</a>."
-  // )
-)
+app.get("/", (_, res) => res.send(html))
 
 app.use("/books", booksRouter)
 

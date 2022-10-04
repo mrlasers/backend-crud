@@ -2,6 +2,19 @@
 
 A little CRUD backend for managing a book library.
 
+## Installation
+
+Server will run on port `9666`.
+
+```sh
+git clone git@github.com:mrlasers/backend-crud.git
+# or
+git clone https://github.com/mrlasers/backend-crud.git
+cd ./backend-crud/
+yarn
+yarn start
+```
+
 ## API
 
 ### Show All Books
@@ -49,7 +62,7 @@ Returns JSON array of all books in the library.
 
 ### Show a Book
 
-Returns JSON array of book if found by `id`, otherwise empty array.
+Returns JSON array of book if found.
 
 **URL**: `/books/{id}`
 
@@ -82,15 +95,9 @@ For a Book with `ID _ZVvgx4abiefTu9YmoSPa` that exists in the library.
 ]
 ```
 
-For a Book with `ID 83QEoUa6W-Q9ctASkhKaQ` that does not exist in the library.
-
-```json
-[]
-```
-
 ### Add a new book
 
-Adds new book to library and returns array of new book.
+Adds new book to library and returns array of new book. Returns JSON array of newly added book.
 
 **URL**: `/books`
 
@@ -120,7 +127,7 @@ Adds new book to library and returns array of new book.
 
 ### Update a book
 
-Updates an existing book and returns array of updated book.
+Updates an existing book and returns JSON array of updated book.
 
 **URL**: `/books/{id}`
 
