@@ -22,7 +22,13 @@ booksRouter.post("/", bodyParser.json(), (req, res) => {
 })
 
 booksRouter.delete("/:id", (req, res) => {
-  return res.send(deleteBook(req.params.id))
+  return pipe(
+    deleteBook(req.params.id),
+    E.fold(
+      () => res.send("Not found").status(304),
+      (id) => res.send(`Book deleted: "${id}"`)
+    )
+  )
 })
 
 booksRouter.put("/:id", bodyParser.json(), (req, res) => {

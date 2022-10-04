@@ -6,7 +6,7 @@ A little CRUD backend for managing a book library.
 
 ### Show All Books
 
-Get the details of all books in the library
+Returns JSON array of all books in the library.
 
 **URL**: `/books`
 
@@ -49,7 +49,7 @@ Get the details of all books in the library
 
 ### Show a Book
 
-Get the details of all books in the library
+Returns JSON array of book if found by `id`, otherwise empty array.
 
 **URL**: `/books/{id}`
 
@@ -88,9 +88,74 @@ For a Book with `ID 83QEoUa6W-Q9ctASkhKaQ` that does not exist in the library.
 []
 ```
 
+### Add a new book
+
+Adds new book to library and returns array of new book.
+
+**URL**: `/books`
+
+**METHOD**: `POST`
+
+**Auth required**: NO
+
+**Permissions required**: None
+
+#### Success Response
+
+**Code**: `200 OK`
+
+**Request body example**
+
+```json
+{
+  "title": "My Cool Book",
+  "author": {
+    "fname": "My",
+    "lname": "Name"
+  },
+  "publisher": "MyCoolBookPublisher.xyz",
+  "releaseYear": 2049
+}
+```
+
+### Update a book
+
+Updates an existing book and returns array of updated book.
+
+**URL**: `/books/{id}`
+
+**METHOD**: `PUT`
+
+**Auth required**: NO
+
+**Permissions required**: None
+
+**Request body examples**
+
+```json
+{
+  "title": "My Coolest Book"
+}
+```
+
+```json
+{
+  "author": {
+    "fname": "My",
+    "lname": "Name"
+  }
+}
+```
+
+```json
+{
+  "releaseYear": 2019
+}
+```
+
 ### Delete a Book
 
-Removes a book from the library.
+Removes a book from the library and returns `id` of removed book.
 
 **URL**: `/books/{id}`
 
@@ -103,5 +168,3 @@ Removes a book from the library.
 #### Success Response
 
 **Code**: `200 OK`
-
-**Examples**

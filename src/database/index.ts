@@ -133,10 +133,15 @@ function _updateBook({
       },
       E.mapLeft(() => errorMsg({ type: "BAD_REQUEST" })),
       E.chain((update) =>
+        Object.keys(update).length
+          ? E.right(update)
+          : E.left(errorMsg({ type: "BAD_REQUEST" }))
+      ),
+      E.chain((update) =>
         pipe(
           books.find((book) => book.id === id),
           E.fromNullable(errorMsg({ type: "NOT_FOUND" })),
-          E.map((book) => ({ ...book, ...update }))
+          E.map((book) => Object.assign(book, update))
         )
       ),
       E.map((updatedBook) => {

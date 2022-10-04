@@ -39,7 +39,7 @@ export type NewBook = D.TypeOf<typeof NewBook>
 
 export const BookUpdate = D.partial({
   title: D.string,
-  author: D.struct({
+  author: D.partial({
     fname: D.string,
     lname: D.string,
   }),

@@ -2,7 +2,8 @@
   "name": "backend-crud",
   "packageManager": "yarn@3.2.3",
   "scripts": {
-    "dev": "tsnd --respawn ./src/index.ts"
+    "dev": "tsnd --respawn ./src/index.ts",
+    "start": "ts-node ./src/index.ts"
   },
   "devDependencies": {
     "@types/body-parser": "^1",
