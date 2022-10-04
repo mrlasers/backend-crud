@@ -20,7 +20,7 @@ Returns JSON array of all books in the library.
 
 **Code**: `200 OK`
 
-**Content examples**
+**Content example**
 
 ```json
 [

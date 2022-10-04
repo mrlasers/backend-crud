@@ -1,15 +1,15 @@
 import * as E from "fp-ts/Either"
-import { flow, identity, pipe } from "fp-ts/lib/function"
+import { flow, pipe } from "fp-ts/lib/function"
 import * as O from "fp-ts/Option"
 import { nanoid } from "nanoid"
 
 import { Book, BookUpdate, ID, NewBook } from "../features/books"
 
-type Schema = {
+type FakeDbSchema = {
   books: Book[]
 }
 
-const fakeDb: Schema = {
+const fakeDb: FakeDbSchema = {
   books: [
     {
       id: "ZbCR2WdXkF4OaCpB00Z8d",
@@ -141,7 +141,7 @@ function _updateBook({
         pipe(
           books.find((book) => book.id === id),
           E.fromNullable(errorMsg({ type: "NOT_FOUND" })),
-          E.map((book) => Object.assign(book, update))
+          E.map((book) => ({ ...book, ...update }))
         )
       ),
       E.map((updatedBook) => {
