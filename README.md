@@ -87,3 +87,21 @@ For a Book with `ID 83QEoUa6W-Q9ctASkhKaQ` that does not exist in the library.
 ```json
 []
 ```
+
+### Delete a Book
+
+Removes a book from the library.
+
+**URL**: `/books/{id}`
+
+**METHOD**: `DELETE`
+
+**Auth required**: NO
+
+**Permissions required**: None
+
+#### Success Response
+
+**Code**: `200 OK`
+
+**Examples**

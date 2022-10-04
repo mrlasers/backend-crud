@@ -1,10 +1,6 @@
-import * as bodyParser from "body-parser"
 import * as express from "express"
-import * as E from "fp-ts/Either"
-import { flow, pipe } from "fp-ts/lib/function"
 
-import { addBook, deleteBook, getBooks } from "./database"
-import { Book, booksRouter, ID, NewBook } from "./features/books"
+import { booksRouter } from "./features/books"
 
 const app = express()
 const port = 9666

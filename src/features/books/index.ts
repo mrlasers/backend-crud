@@ -37,6 +37,18 @@ export const NewBook = D.struct({
 
 export type NewBook = D.TypeOf<typeof NewBook>
 
+export const BookUpdate = D.partial({
+  title: D.string,
+  author: D.struct({
+    fname: D.string,
+    lname: D.string,
+  }),
+  publisher: D.string,
+  releaseYear: YearD,
+})
+
+export type BookUpdate = D.TypeOf<typeof BookUpdate>
+
 export const Book = pipe(NewBook, D.intersect(D.struct({ id: ID })))
 
 export type Book = D.TypeOf<typeof Book>

@@ -1,10 +1,9 @@
 import * as E from "fp-ts/Either"
 import { flow, identity, pipe } from "fp-ts/lib/function"
 import * as O from "fp-ts/Option"
-import { DecodeError } from "io-ts/Decoder"
 import { nanoid } from "nanoid"
 
-import { Book, ID, NewBook } from "../features/books"
+import { Book, BookUpdate, ID, NewBook } from "../features/books"
 
 type Schema = {
   books: Book[]
@@ -13,7 +12,7 @@ type Schema = {
 const fakeDb: Schema = {
   books: [
     {
-      id: nanoid(),
+      id: "ZbCR2WdXkF4OaCpB00Z8d",
       title: "Hello, World!: An Interactive Guide to Computers",
       author: {
         fname: "John",
@@ -23,7 +22,7 @@ const fakeDb: Schema = {
       releaseYear: 2021,
     },
     {
-      id: nanoid(),
+      id: "9RANMKReRogZ2dVZNL1zo",
       title: "Hello, World! 2: An Even More Interactive Guide to Computers",
       author: {
         fname: "John",
@@ -35,13 +34,24 @@ const fakeDb: Schema = {
   ],
 }
 
+function updateDbBooks(books: Book[]): void {
+  fakeDb.books = books
+}
+
 function addBookId(id: ID) {
   return (newBook: NewBook): Book => {
     return { ...newBook, id }
   }
 }
 
-type ErrorMsg = { type: "BAD_REQUEST"; msg: string }
+type ErrorMsg =
+  | { type: "BAD_REQUEST"; msg?: string }
+  | { type: "SERVER_ERROR"; msg?: string }
+  | { type: "NOT_FOUND"; msg?: string }
+
+function errorMsg(msg: ErrorMsg): ErrorMsg {
+  return msg
+}
 
 export function _addBook({
   nextBookId,
@@ -69,14 +79,6 @@ export function _addBook({
     )
 }
 
-export const addBook = _addBook({
-  nextBookId: nanoid,
-  getBooks: () => fakeDb.books,
-  callback: (books) => {
-    fakeDb.books = books
-  },
-})
-
 export function _getBooks({ getBooks }: { getBooks: () => Book[] }) {
   return (bookId?: ID): Book | Book[] => {
     const books = getBooks()
@@ -95,8 +97,6 @@ export function _getBooks({ getBooks }: { getBooks: () => Book[] }) {
   }
 }
 
-export const getBooks = _getBooks({ getBooks: () => fakeDb.books })
-
 export function _deleteBook({
   getBooks,
   callback,
@@ -113,9 +113,54 @@ export function _deleteBook({
   }
 }
 
+function _updateBook({
+  getBooks,
+  callback,
+}: {
+  getBooks: () => Book[]
+  callback: (books: Book[]) => void
+}) {
+  return (id: ID, bookUpdate: BookUpdate): E.Either<ErrorMsg, Book[]> => {
+    const books = getBooks()
+
+    return pipe(
+      bookUpdate,
+      BookUpdate.decode,
+      (result) => {
+        console.log("bookupdate decoder result", result)
+
+        return result
+      },
+      E.mapLeft(() => errorMsg({ type: "BAD_REQUEST" })),
+      E.chain((update) =>
+        pipe(
+          books.find((book) => book.id === id),
+          E.fromNullable(errorMsg({ type: "NOT_FOUND" })),
+          E.map((book) => ({ ...book, ...update }))
+        )
+      ),
+      E.map((updatedBook) => {
+        callback(
+          books.map((book) => (book.id === updatedBook.id ? updatedBook : book))
+        )
+
+        return [updatedBook]
+      })
+    )
+  }
+}
+
+export const addBook = _addBook({
+  nextBookId: nanoid,
+  getBooks: () => fakeDb.books,
+  callback: updateDbBooks,
+})
+export const getBooks = _getBooks({ getBooks: () => fakeDb.books })
+export const updateBook = _updateBook({
+  getBooks: () => fakeDb.books,
+  callback: updateDbBooks,
+})
 export const deleteBook = _deleteBook({
   getBooks: () => fakeDb.books,
-  callback: (books) => {
-    fakeDb.books = books
-  },
+  callback: updateDbBooks,
 })
